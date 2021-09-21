@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { nanoid } from '@reduxjs/toolkit'
-import { postAdded } from './postsSlice'
+import { useSelector, useDispatch } from 'react-redux'
+import { postUpdated } from './postsSlice'
 
-export const AddPostForm = () => {
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
+export const EditPostForm = ({ match }) => {
+  const { postId } = match.params
+  const post = useSelector((state) =>
+    state.posts.find((post) => post.id === postId)
+  )
+  const [title, setTitle] = useState(post.title)
+  const [content, setContent] = useState(post.content)
 
   const dispatch = useDispatch()
 
@@ -20,24 +23,21 @@ export const AddPostForm = () => {
     setContent(event.target.value)
   }
 
-  const onSavePostClicked = () => {
+  const onUpdatePostClicked = () => {
     if (title && content) {
       dispatch(
-        postAdded({
-          id: nanoid(),
+        postUpdated({
+          id: postId,
           title,
           content,
         })
       )
-
-      setTitle('')
-      setContent('')
     }
   }
 
   return (
     <section>
-      <h2>Add a New Post</h2>
+      <h2>Edit Post</h2>
       <form>
         <label htmlFor="postTitle">Post Title:</label>
         <input
@@ -53,11 +53,11 @@ export const AddPostForm = () => {
           name="postContent"
           value={content}
           onChange={onContentChanged}
-        />
-        <button type="button" onClick={onSavePostClicked}>
-          Save Post
-        </button>
+        ></textarea>
       </form>
+      <button type="button" onClick={onUpdatePostClicked}>
+        Update
+      </button>
     </section>
   )
 }
