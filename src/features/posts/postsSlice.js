@@ -48,4 +48,4 @@ const postsSlice = createSlice({
 // Destructuring assignment to get individual reducers.
 export const { postAdded, postUpdated } = postsSlice.actions
 
-export default postsSlice.reducer
+export const postsReducer = postsSlice.reducer
